@@ -6,157 +6,120 @@ import google.generativeai as genai
 # ==========================================
 st.set_page_config(page_title="StadiumPulse Ops Centre", page_icon="🏟️", layout="wide")
 
-# Sleek glassmorphic dark theme with completely isolated sidebar pointer rules
+# Sleek glassmorphic dark theme
 st.markdown("""
-    <style>
-    /* Main app background */
-    .stApp {
-        background: radial-gradient(circle at 10% 20%, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 90.1%);
-        color: #f1f5f9;
-        font-family: 'Helvetica Neue', sans-serif;
-    }
-
-    /* Override Streamlit container padding and ensure bottom content doesn't get cut off by footer */
-    .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 8rem !important;
-    }
-
-    /* CRITICAL INTERACTION FIX FOR SIDEBAR */
-    [data-testid="stSidebar"] {
-        background-color: rgb(15, 23, 42) !important;
-        border-right: 1px solid rgba(255,255,255,0.1);
-        z-index: 100 !important;
-    }
-
-    /* Force all child elements in the sidebar to accept clicks */
-    [data-testid="stSidebar"] * {
-        pointer-events: auto !important;
-    }
-    
-    .sidebar-title {
-        color: #f1f5f9;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        font-size: 1.2rem;
-        margin-top: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .sidebar-label {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: rgba(255,255,255,0.4);
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    /* Main Dashboard Layout Components */
-    .main-header {
-        color: white;
-        font-weight: 800;
-        font-size: 2.5rem;
-        margin-bottom: 0.25rem;
-    }
-    
-    .main-subheader {
-        font-weight: 500;
-        color: rgba(255,255,255,0.6);
-        font-size: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    /* Section Headers */
-    .section-header {
-        font-weight: 700;
-        font-size: 1.4rem;
-        margin-top: 1.5rem;
-        margin-bottom: 1rem;
-        color: #f1f5f9;
-    }
-
-    /* Glassmorphism Card */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 1.5rem;
-        backdrop-filter: blur(8px);
-        margin-bottom: 1.5rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .glass-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(34, 211, 238, 0.15);
-    }
-    
-    /* Neon Text Accents */
-    .neon-text {
-        color: #22d3ee;
-        text-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
-        font-weight: 800;
-        font-size: 1.8rem;
-    }
-    
-    .pink-neon {
-        color: #f472b6;
-        text-shadow: 0 0 10px rgba(244, 114, 182, 0.6);
-        font-weight: 800;
-        font-size: 1.8rem;
-    }
-
-    /* Code Box Styling */
-    div[data-testid="stCodeBlock"] {
-        border-radius: 12px;
-        background-color: rgb(15, 23, 42);
-        border: 1px solid rgba(255,255,255,0.08);
-    }
-    
-    /* Fixed Footer Bar */
-    .playback-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: rgba(15, 23, 42, 0.95);
-        backdrop-filter: blur(12px);
-        border-top: 1px solid rgba(255,255,255,0.1);
-        padding: 0.75rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 90 !important;
-        font-size: 0.9rem;
-        color: rgba(255,255,255,0.6);
-    }
-    .user-profile { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background-color: #f472b6; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;}
-    </style>
+<style>
+.stApp {
+    background: radial-gradient(circle at 10% 20%, rgb(15, 23, 42) 0%, rgb(30, 41, 59) 90.1%);
+    color: #f1f5f9;
+    font-family: 'Helvetica Neue', sans-serif;
+}
+.block-container {
+    padding-top: 1.5rem;
+    padding-bottom: 8rem !important;
+}
+[data-testid="stSidebar"] {
+    background-color: rgb(15, 23, 42) !important;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    z-index: 100 !important;
+}
+[data-testid="stSidebar"] * {
+    pointer-events: auto !important;
+}
+.sidebar-title {
+    color: #f1f5f9;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+.sidebar-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.main-header {
+    color: white;
+    font-weight: 800;
+    font-size: 2.5rem;
+    margin-bottom: 0.25rem;
+}
+.main-subheader {
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+.section-header {
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: #f1f5f9;
+}
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+    margin-bottom: 1.5rem;
+}
+.neon-text {
+    color: #22d3ee;
+    text-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+.pink-neon {
+    color: #f472b6;
+    text-shadow: 0 0 10px rgba(244, 114, 182, 0.6);
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+.playback-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 90 !important;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+}
+.user-profile { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 28px; height: 28px; border-radius: 50%; background-color: #f472b6; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;}
+</style>
 """, unsafe_allow_html=True)
 
 
 # ==========================================
-# 1. SECURE BACKEND API KEY CHECK
+# 1. BACKEND API KEY CHECK
 # ==========================================
 api_key = st.secrets.get("GEMINI_API_KEY")
 
 def init_gemini(key):
     try:
         genai.configure(api_key=key)
-        model = genai.GenerativeModel(
+        return genai.GenerativeModel(
             model_name="gemini-2.5-flash",
             system_instruction=(
-                "You are 'StadiumPulse AI'—an elite Smart Stadium Operations AI built for FIFA World Cup 2026. "
-                "Telemetry context: Gate A is 92% congested. Gate B/C are at 20%. Concession Stand #4 is backlogged. "
-                "Give highly operational, bulleted, action-oriented responses. Draft signage text or announcements when asked."
+                "You are 'StadiumPulse AI'—an elite Smart Stadium Operations AI built for FIFA World Cup 2026."
             )
         )
-        return model
-    except Exception as e:
+    except Exception:
         return None
 
 if "model" not in st.session_state and api_key:
@@ -168,7 +131,6 @@ if "model" not in st.session_state and api_key:
 # ==========================================
 with st.sidebar:
     st.markdown("<div class='sidebar-title'>StadiumPulse Ops</div>", unsafe_allow_html=True)
-    
     st.markdown("<div class='sidebar-label'>Operations Centre</div>", unsafe_allow_html=True)
     nav_main = st.radio(
         "Ops Navigation", 
@@ -179,7 +141,7 @@ with st.sidebar:
     )
     
     st.markdown("<div class='sidebar-label'>Resources</div>", unsafe_allow_html=True)
-    nav_resources = st.radio(
+    st.radio(
         "Resources Navigation", 
         ["Operations Manual", "Team Channels", "Incident Reports"], 
         index=0, 
@@ -189,49 +151,45 @@ with st.sidebar:
 
 
 # ==========================================
-# 3. MAIN DASHBOARD CONTENT (Dynamic rendering based on Nav)
+# 3. MAIN DASHBOARD CONTENT
 # ==========================================
 
-# --- 1. DASHBOARD VIEW ---
+# --- DASHBOARD VIEW ---
 if nav_main == "Dashboard":
     st.markdown("<div class='main-header'>StadiumPulse Control Hub</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Real-time logistics, crowd intelligence, and automated operational routing.</div>", unsafe_allow_html=True)
 
-    # Grid Layout: Critical Telemetry Cards
     st.markdown("<div class='section-header'>Active Telemetry</div>", unsafe_allow_html=True)
     m1, m2, m3 = st.columns(3)
 
     with m1:
-        st.markdown("""
+        st.html("""
             <div class="glass-card">
                 <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">GATE A CONGESTION</div>
-                <div class="neon-text">92% <span style="font-size:0.95rem; color:#ef4444; text-shadow:none; font-weight:600; margin-left: 8px;">🔴 CRITICAL SURGE</span></div>
+                <div class="neon-text">92% <span style="font-size:0.95rem; color:#ef4444; font-weight:600; margin-left: 8px;">🔴 CRITICAL SURGE</span></div>
                 <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Directing fans to overflow Gates B and C.</div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with m2:
-        st.markdown("""
+        st.html("""
             <div class="glass-card">
                 <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">CONCESSION STAND #4</div>
-                <div class="pink-neon">14 MIN <span style="font-size:0.95rem; color:#f59e0b; text-shadow:none; font-weight:600; margin-left: 8px;">🟡 SLOW</span></div>
+                <div class="pink-neon">14 MIN <span style="font-size:0.95rem; color:#f59e0b; font-weight:600; margin-left: 8px;">🟡 SLOW</span></div>
                 <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Queue length currently at 18 active visitors.</div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with m3:
-        st.markdown("""
+        st.html("""
             <div class="glass-card">
                 <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">AI OPERATION ROUTING</div>
-                <div style="font-weight: 800; font-size: 1.8rem; color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);">ACTIVE</div>
+                <div style="font-weight: 800; font-size: 1.8rem; color: #22c55e;">ACTIVE</div>
                 <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Dynamic digital signboards synced.</div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
-
-    # Dynamic Bottom Section: Terminal logs and AI Assistant
     col1, col2 = st.columns([1, 1.2])
-
     with col1:
         st.markdown("<div class='section-header'>Live System Telemetry Logs</div>", unsafe_allow_html=True)
         st.code(
@@ -240,55 +198,38 @@ if nav_main == "Dashboard":
             "[19:32:30] READY: Awaiting AI crowd-routing recommendations...",
             language="bash"
         )
-
     with col2:
         st.markdown("<div class='section-header'>Operations Chat Co-Pilot</div>", unsafe_allow_html=True)
-        
-        # Missing secrets handling
         if not api_key:
-            st.markdown("""
+            st.html("""
                 <div class="glass-card" style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.25);">
                     <div style="font-weight: 700; color: #f87171; font-size: 1.1rem;">⚠️ API KEY NOT FOUND IN SECRETS</div>
                     <div style="font-size:0.85rem; margin-top:6px; color:rgba(248, 113, 113, 0.8);">
-                        Please set your Gemini API key in your Streamlit Cloud Workspace Secrets as: <br>
-                        <code style="background-color: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: white;">GEMINI_API_KEY = "your-api-key"</code>
+                        Please set your Gemini API key in your Streamlit Cloud Workspace Secrets.
                     </div>
                 </div>
-            """, unsafe_allow_html=True)
+            """)
             st.stop()
 
-        # Chat UI container setup
         if "messages" not in st.session_state:
-            st.session_state.messages = [{
-                "role": "assistant", 
-                "content": "Awaiting commands. I have processed the live telemetry feed. Ready to design emergency routing signs or redirect logistical units."
-            }]
+            st.session_state.messages = [{"role": "assistant", "content": "Awaiting commands."}]
             
         for msg in st.session_state.messages:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
                 
-        # Chat Input handler
-        if prompt := st.chat_input("Ask AI Co-Pilot (e.g., 'Draft a rerouting billboard announcement for Gate A')"):
+        if prompt := st.chat_input("Ask AI Co-Pilot..."):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"):
                 st.markdown(prompt)
-                
             with st.chat_message("assistant"):
-                with st.spinner("AI is routing..."):
+                with st.spinner("Analyzing..."):
                     model = st.session_state.get("model")
-                    if model:
-                        try:
-                            response = model.generate_content(prompt)
-                            reply = response.text
-                        except Exception as e:
-                            reply = f"Error calling Gemini API: {str(e)}"
-                    else:
-                        reply = "Operational error: Could not initialize Gemini connection."
+                    reply = model.generate_content(prompt).text if model else "Operational error: Could not initialize Gemini connection."
                     st.markdown(reply)
                     st.session_state.messages.append({"role": "assistant", "content": reply})
 
-# --- 2. STADIUM MAP VIEW ---
+# --- STADIUM MAP VIEW ---
 elif nav_main == "Stadium Map":
     st.markdown("<div class='main-header'>Stadium Tactical Heatmap</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Real-time spatial density and spectator flow metrics.</div>", unsafe_allow_html=True)
@@ -297,7 +238,8 @@ elif nav_main == "Stadium Map":
     
     with col_map:
         st.markdown("<div class='section-header'>Live Perimeter Map</div>", unsafe_allow_html=True)
-        st.markdown("""
+        # Using st.html ensures Streamlit renders the SVG directly instead of printing tags
+        st.html("""
             <div class="glass-card" style="text-align: center; padding: 2rem;">
                 <svg width="100%" height="300" viewBox="0 0 600 300" style="background: transparent;">
                     <rect x="50" y="20" width="500" height="260" rx="130" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="8" />
@@ -318,11 +260,11 @@ elif nav_main == "Stadium Map":
                     ⚠️ ALERT: ZONE A PERIMETER SURGE DETECTED
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
         
     with col_details:
         st.markdown("<div class='section-header'>Gate Statistics</div>", unsafe_allow_html=True)
-        st.markdown("""
+        st.html("""
             <div class="glass-card">
                 <table style="width: 100%; border-collapse: collapse; color: white;">
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; font-size: 0.85rem; color: rgba(255,255,255,0.5);">
@@ -351,28 +293,17 @@ elif nav_main == "Stadium Map":
                     </tr>
                 </table>
             </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-            <div class="glass-card" style="border-left: 4px solid #22d3ee;">
-                <div style="font-weight: 700; color: #22d3ee; margin-bottom: 5px;">AI CO-PILOT ACTIONS</div>
-                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.4;">
-                    1. Re-routing North Lot shuttle drop-offs to Gate B corridor.<br>
-                    2. Updating Gate A digital signage to: 'USE ALTERNATIVE GATES B & C'.
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
+        """)
 
-# --- 3. TELEMETRY FEED VIEW ---
+# --- TELEMETRY FEED VIEW ---
 elif nav_main == "Telemetry Feed":
     st.markdown("<div class='main-header'>Real-Time Telemetry Feed</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Granular data streams gathered from stadium sensors, cameras, and transport networks.</div>", unsafe_allow_html=True)
     
     col_sys, col_cam = st.columns([1, 1])
-    
     with col_sys:
         st.markdown("<div class='section-header'>Hardware Sensor Matrix</div>", unsafe_allow_html=True)
-        st.markdown("""
+        st.html("""
             <div class="glass-card">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
                     <span style="color: rgba(255,255,255,0.5);">SENSOR TYPE</span>
@@ -400,11 +331,10 @@ elif nav_main == "Telemetry Feed":
                     <strong style="color: #ef4444;">18 active orders</strong>
                 </div>
             </div>
-        """, unsafe_allow_html=True)
-        
+        """)
     with col_cam:
         st.markdown("<div class='section-header'>AI Computer Vision Feed</div>", unsafe_allow_html=True)
-        st.markdown("""
+        st.html("""
             <div class="glass-card">
                 <div style="background-color: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.05); font-family: monospace; font-size: 0.85rem;">
                     <div style="color: #22d3ee; margin-bottom: 8px;">🎥 [CAM-04-NORTH] ANALYSING SPECTATOR VELOCITY...</div>
@@ -417,9 +347,9 @@ elif nav_main == "Telemetry Feed":
                     <span style="color: rgba(255,255,255,0.4);">[19:34:12]</span> Flow classification: <span style="color: #4ade80;">Optimal</span>
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
-# --- 4. CROWD FLOW VIEW ---
+# --- CROWD FLOW VIEW ---
 elif nav_main == "Crowd Flow":
     st.markdown("<div class='main-header'>Crowd Flow Optimizer</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Automated corridor routing models and crowd mitigation protocols.</div>", unsafe_allow_html=True)
@@ -428,7 +358,8 @@ elif nav_main == "Crowd Flow":
     
     with col_routes:
         st.markdown("<div class='section-header'>Dynamic Routing Corridors</div>", unsafe_allow_html=True)
-        st.markdown("""
+        # Using st.html renders the glowing progress bars properly!
+        st.html("""
             <div class="glass-card">
                 <div style="font-weight: 700; font-size: 1.1rem; color: white; margin-bottom: 12px;">Active Evacuation & Directional Routings</div>
                 
@@ -462,11 +393,11 @@ elif nav_main == "Crowd Flow":
                     </div>
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
         
     with col_alerts:
         st.markdown("<div class='section-header'>Flow Intervention Triggers</div>", unsafe_allow_html=True)
-        st.markdown("""
+        st.html("""
             <div class="glass-card" style="border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.02);">
                 <div style="font-weight: 700; color: #ef4444; margin-bottom: 6px; font-size: 1.1rem;">⚠️ LEVEL 2 INTERVENTION REQUIRED</div>
                 <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5;">
@@ -481,24 +412,22 @@ elif nav_main == "Crowd Flow":
                     Digital message sign boards at the central terminal are synced with alternative routes redirecting spectators to East Walkways.
                 </div>
             </div>
-        """, unsafe_allow_html=True)
+        """)
 
-# --- 5. FALLBACK / DEFAULT RESOURCE VIEWS ---
+# --- DEFAULT FALLBACK ---
 else:
     st.markdown(f"<div class='main-header'>{nav_main} View</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='main-subheader'>Monitoring resource feed for {nav_main}</div>", unsafe_allow_html=True)
-    st.markdown("""
+    st.html("""
         <div class="glass-card">
             <h3 style="color: white; margin-bottom: 10px;">Operational Status: Live</h3>
-            <p style="color: rgba(255,255,255,0.7);">System metrics and asset distribution are fully aligned with the central command. No alerts raised.</p>
+            <p style="color: rgba(255,255,255,0.7);">System metrics are fully aligned. No alerts raised.</p>
         </div>
-    """, unsafe_allow_html=True)
-
+    """)
 
 # ==========================================
 # 4. FIXED FOOTER PLAYBACK BAR
 # ==========================================
-st.markdown("""
+st.html("""
     <div class='playback-bar'>
         <div class='user-profile'>
             <div class='user-avatar'>S</div>
@@ -507,4 +436,4 @@ st.markdown("""
         <div>EVENT PROGRESS: 1h 32m (LIVE)</div>
         <div style='color: #22d3ee; font-weight:600; text-shadow: 0 0 5px rgba(34, 211, 238, 0.4);'>SYSTEM OPTIMIZED</div>
     </div>
-""", unsafe_allow_html=True)
+""")

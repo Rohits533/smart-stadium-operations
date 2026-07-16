@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StadiumPulse AI - Smart Operations</title>
+    <!-- Tailwind CSS for beautiful styling without heavy local files -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .glass {
@@ -15,6 +16,7 @@
 </head>
 <body class="bg-slate-900 text-white min-h-screen font-sans">
 
+    <!-- Header -->
     <header class="p-6 border-b border-slate-800 flex justify-between items-center">
         <h1 class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
             🏟️ STADIUMPULSE AI
@@ -24,8 +26,10 @@
         </span>
     </header>
 
+    <!-- Main Grid -->
     <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
+        <!-- Left Column: Metrics & Simulation -->
         <div class="lg:col-span-2 space-y-6">
             <h2 class="text-xl font-bold text-slate-300">Operations Control Panel</h2>
             <div class="grid grid-cols-3 gap-4">
@@ -43,6 +47,7 @@
                 </div>
             </div>
 
+            <!-- Simulated Operations Map/Feed -->
             <div class="glass p-6 rounded-2xl h-80 flex flex-col justify-between">
                 <div>
                     <h3 class="font-bold text-lg mb-2">Real-Time Event Stream</h3>
@@ -56,11 +61,13 @@
             </div>
         </div>
 
+        <!-- Right Column: GenAI Control Room & Chat -->
         <div class="glass p-6 rounded-2xl flex flex-col justify-between h-[500px]">
             <div>
                 <h3 class="font-bold text-lg mb-1">GenAI Assistant</h3>
                 <p class="text-xs text-slate-400 mb-4">Ask the AI to optimize routing, translate instructions, or dispatch virtual support.</p>
                 
+                <!-- Chat Window -->
                 <div id="chat-box" class="h-64 overflow-y-auto space-y-3 pr-2 text-sm">
                     <div class="bg-blue-600/30 p-3 rounded-lg text-slate-200">
                         <strong>AI Co-Pilot:</strong> Telemetry shows Gate A is congested (92%). Would you like me to generate alternative routing prompts for the digital signage screens?
@@ -68,6 +75,7 @@
                 </div>
             </div>
 
+            <!-- Input area -->
             <div class="mt-4">
                 <div class="flex gap-2">
                     <input id="user-input" type="text" placeholder="Type a command (e.g., 'Reroute Gate A fans')..." 
@@ -81,31 +89,36 @@
 
     </main>
 
-    <script>
-        function sendMessage() {
+    <!-- Connected App Logic Integration -->
+    <script type="module">
+        import { askStadiumAI } from './app.js';
+
+        window.sendMessage = async function() {
             const input = document.getElementById('user-input');
             const chatBox = document.getElementById('chat-box');
             if(!input.value.trim()) return;
 
-            // Append user message
-            chatBox.innerHTML += `<div class="bg-slate-800/50 p-3 rounded-lg text-right"><strong>You:</strong> ${input.value}</div>`;
-            const text = input.value.toLowerCase();
+            const userText = input.value;
+            
+            // Append user message to UI
+            chatBox.innerHTML += `<div class="bg-slate-800/50 p-3 rounded-lg text-right"><strong>You:</strong> ${userText}</div>`;
             input.value = '';
-
-            // Auto-scroll
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Simple responsive mock responses (We will hook up Gemini API in our next step for the real advanced backend logic!)
-            setTimeout(() => {
-                let reply = "I'm analyzing the telemetry data to formulate an optimized plan.";
-                if(text.includes('gate a') || text.includes('reroute')) {
-                    reply = "<strong>AI Recommendation dispatched:</strong> Digital signage at Gate A updated to direct inbound traffic to Gate B. Expected congestion decrease: 15% in the next 10 minutes.";
-                } else if (text.includes('help') || text.includes('hello')) {
-                    reply = "Hello! I am ready to process tournament logistics queries, draft emergency alerts, or translate announcements.";
-                }
-                chatBox.innerHTML += `<div class="bg-blue-600/30 p-3 rounded-lg text-slate-200"><strong>AI Co-Pilot:</strong> ${reply}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 800);
+            // Show loading state
+            const loadingId = "load-" + Date.now();
+            chatBox.innerHTML += `<div id="${loadingId}" class="bg-blue-600/10 p-3 rounded-lg text-slate-400 italic">AI Co-Pilot is thinking...</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Get live response from Gemini API via app.js
+            const aiReply = await askStadiumAI(userText);
+
+            // Remove loading state and append real AI reply
+            const loadingEl = document.getElementById(loadingId);
+            if(loadingEl) loadingEl.remove();
+            
+            chatBox.innerHTML += `<div class="bg-blue-600/30 p-3 rounded-lg text-slate-200"><strong>AI Co-Pilot:</strong> ${aiReply}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>
 </body>

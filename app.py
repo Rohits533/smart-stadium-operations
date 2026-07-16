@@ -22,11 +22,22 @@ st.markdown("""
         padding-bottom: 5rem;
     }
 
-    /* Sidebar Styling */
+    /* Sidebar Styling - ensuring click events flow normally to interactive widgets */
     [data-testid="stSidebar"] {
-        background-color: rgba(15, 23, 42, 0.95);
+        background-color: rgba(15, 23, 42, 0.95) !important;
         border-right: 1px solid rgba(255,255,255,0.1);
         backdrop-filter: blur(10px);
+        z-index: 100;
+    }
+    
+    /* Ensure all sidebar inputs remain clickable and aren't blocked by overlays */
+    [data-testid="stSidebar"] .element-container,
+    [data-testid="stSidebar"] .stWidget,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] input,
+    [data-testid="stSidebar"] [role="radiogroup"] {
+        pointer-events: auto !important;
+        cursor: pointer !important;
     }
     
     [data-testid="stSidebar"] h2 {
@@ -135,7 +146,6 @@ st.markdown("""
 # ==========================================
 # 1. SECURE BACKEND API KEY CHECK
 # ==========================================
-# Quietly reads the key from Streamlit Secrets
 api_key = st.secrets.get("GEMINI_API_KEY")
 
 def init_gemini(key):
@@ -153,7 +163,6 @@ def init_gemini(key):
     except Exception as e:
         return None
 
-# Initialize Gemini model seamlessly in the background
 if "model" not in st.session_state and api_key:
     st.session_state.model = init_gemini(api_key)
 
@@ -224,7 +233,7 @@ with col1:
 with col2:
     st.markdown("<div class='section-header'>Operations Chat Co-Pilot</div>", unsafe_allow_html=True)
     
-    # Missing secrets handling (Strictly formatted to notify admins, no inputs on home screen)
+    # Missing secrets handling
     if not api_key:
         st.markdown("""
             <div class="glass-card" style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.25);">

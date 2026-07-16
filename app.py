@@ -1,10 +1,3 @@
-Got it! Right now, the app is only changing its views based on the `nav_main` selection from the Operations Centre radio buttons, meaning the **Resources** menu choices don't actually swap out the page content when clicked.
-
-To fix this, we can unify the navigation logic in the sidebar so that clicking *any* item under either menu switches the view perfectly, and then implement the full layouts and text content for **Operations Manual**, **Team Channels**, and **Incident Reports**.
-
-Here is the fully upgraded `app.py` with all resource sections functional and beautifully styled to match your dark glassmorphic layout:
-
-```python
 import streamlit as st
 import google.generativeai as genai
 
@@ -592,5 +585,3 @@ st.html("""
         <div style='color: #22d3ee; font-weight:600; text-shadow: 0 0 5px rgba(34, 211, 238, 0.4);'>SYSTEM OPTIMIZED</div>
     </div>
 """)
-
-```

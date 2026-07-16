@@ -561,52 +561,156 @@ elif active_page == "Crowd Flow":
     st.markdown("<div class='main-header'>Crowd Flow Optimizer</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Automated corridor routing models and crowd mitigation protocols.</div>", unsafe_allow_html=True)
 
+    st.markdown("""
+    <style>
+    .route-card {
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 18px;
+        padding: 1.5rem;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+        animation: cardIn 0.7s ease-out both;
+    }
+
+    .route-title {
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: white;
+        margin-bottom: 14px;
+        letter-spacing: 0.02em;
+    }
+
+    .route-item {
+        margin-bottom: 16px;
+    }
+
+    .route-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.88);
+    }
+
+    .route-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+    }
+
+    .route-value-red { color: #ef4444; font-weight: 800; }
+    .route-value-cyan { color: #22d3ee; font-weight: 800; }
+    .route-value-green { color: #4ade80; font-weight: 800; }
+
+    .route-track {
+        height: 10px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .route-fill {
+        height: 100%;
+        border-radius: 999px;
+        animation: fillGrow 1.1s ease-out forwards;
+        transform-origin: left center;
+    }
+
+    .route-fill-red {
+        width: 88%;
+        background: linear-gradient(90deg, #ef4444 0%, #f97316 100%);
+        box-shadow: 0 0 10px rgba(239,68,68,0.6);
+    }
+
+    .route-fill-cyan {
+        width: 24%;
+        background: linear-gradient(90deg, #22d3ee 0%, #38bdf8 100%);
+        box-shadow: 0 0 10px rgba(34,211,238,0.55);
+    }
+
+    .route-fill-green {
+        width: 12%;
+        background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+        box-shadow: 0 0 10px rgba(74,222,128,0.55);
+    }
+
+    .flow-alert {
+        border-left: 4px solid #ef4444;
+        background: rgba(239, 68, 68, 0.03);
+        border-radius: 18px;
+        padding: 1.5rem;
+        animation: cardIn 0.75s ease-out both;
+    }
+
+    .flow-alert-title {
+        font-weight: 800;
+        color: #ef4444;
+        margin-bottom: 6px;
+        font-size: 1.05rem;
+    }
+
+    .flow-alert-text {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.74);
+        line-height: 1.55;
+    }
+
+    @keyframes fillGrow {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     col_routes, col_alerts = st.columns([1.2, 1])
 
     with col_routes:
-        st.markdown("<div class='section-header'>Dynamic Routing Corridors</div>", unsafe_allow_html=True)
         st.markdown("""
-            <div class="glass-card delay-1">
-                <div style="font-weight: 800; font-size: 1.05rem; color: white; margin-bottom: 12px;">Active Evacuation & Directional Routings</div>
+            <div class="route-card">
+                <div class="route-title">Active Evacuation & Directional Routings</div>
 
-                <div style="margin-bottom: 15px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
-                        <span>🚇 Sector North Express Way</span>
-                        <span style="color: #ef4444; font-weight: bold;">88% Load</span>
+                <div class="route-item">
+                    <div class="route-row">
+                        <span class="route-label">🚇 Sector North Express Way</span>
+                        <span class="route-value-red">88% Load</span>
                     </div>
-                    <div style="height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-                        <div style="width: 88%; height: 100%; background-color: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+                    <div class="route-track">
+                        <div class="route-fill route-fill-red"></div>
                     </div>
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
-                        <span>🏟️ East Concourse Walkway</span>
-                        <span style="color: #22d3ee; font-weight: bold;">24% Load</span>
+                <div class="route-item">
+                    <div class="route-row">
+                        <span class="route-label">🏟️ East Concourse Walkway</span>
+                        <span class="route-value-cyan">24% Load</span>
                     </div>
-                    <div style="height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-                        <div style="width: 24%; height: 100%; background-color: #22d3ee; box-shadow: 0 0 8px #22d3ee;"></div>
+                    <div class="route-track">
+                        <div class="route-fill route-fill-cyan"></div>
                     </div>
                 </div>
 
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
-                        <span>🎟️ West Gate B Overflow Corridor</span>
-                        <span style="color: #4ade80; font-weight: bold;">12% Load</span>
+                <div class="route-item" style="margin-bottom: 0;">
+                    <div class="route-row">
+                        <span class="route-label">🎟️ West Gate B Overflow Corridor</span>
+                        <span class="route-value-green">12% Load</span>
                     </div>
-                    <div style="height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-                        <div style="width: 12%; height: 100%; background-color: #4ade80; box-shadow: 0 0 8px #4ade80;"></div>
+                    <div class="route-track">
+                        <div class="route-fill route-fill-green"></div>
                     </div>
                 </div>
             </div>
         """, unsafe_allow_html=True)
 
     with col_alerts:
-        st.markdown("<div class='section-header'>Flow Intervention Triggers</div>", unsafe_allow_html=True)
         st.markdown("""
-            <div class="glass-card delay-2" style="border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.02);">
-                <div style="font-weight: 800; color: #ef4444; margin-bottom: 6px; font-size: 1.05rem;">⚠️ LEVEL 2 INTERVENTION REQUIRED</div>
-                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.55;">
+            <div class="flow-alert">
+                <div class="flow-alert-title">⚠️ LEVEL 2 INTERVENTION REQUIRED</div>
+                <div class="flow-alert-text">
                     Spectator queue build-up at <strong>Gate A</strong> exceeds stadium perimeter buffer limit.
                     Recommended protocol: Trigger LED signage re-routes and dispatch 2 field safety supervisors to corridor intersection 2-A.
                 </div>

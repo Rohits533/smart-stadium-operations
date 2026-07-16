@@ -129,20 +129,23 @@ if "model" not in st.session_state and api_key:
 # ==========================================
 # 2. SIDEBAR NAVIGATION CONTROLLER
 # ==========================================
-# Using a single session state variable ensures the menus don't fight each other
+# Initialize current_view and track previous selections to detect clicks
 if "current_view" not in st.session_state:
     st.session_state.current_view = "Dashboard"
+if "prev_main" not in st.session_state:
+    st.session_state.prev_main = "Dashboard"
+if "prev_res" not in st.session_state:
+    st.session_state.prev_res = "Operations Manual"
 
 with st.sidebar:
     st.markdown("<div class='sidebar-title'>StadiumPulse Ops</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='sidebar-label'>Operations Centre</div>", unsafe_allow_html=True)
-    # Find matching index or default to None if the active view belongs to the other list
     ops_options = ["Dashboard", "Stadium Map", "Telemetry Feed", "Crowd Flow"]
     try:
         ops_idx = ops_options.index(st.session_state.current_view)
     except ValueError:
-        ops_idx = 0 # Default placeholder if current view is a resource item
+        ops_idx = 0 # Default if current view is a resource view
 
     nav_main = st.radio(
         "Ops Navigation", 
@@ -167,20 +170,15 @@ with st.sidebar:
         label_visibility="collapsed"
     )
 
-    # Sync mechanisms to detect which radio button clicked last
-    if st.is_experimental_rerun:
-        pass # Avoid break cycles
-        
-# Determine what page should actually render based on interactions
-ctx_changes = st.session_state.get("last_nav_main", "Dashboard") != nav_main
-res_changes = st.session_state.get("last_nav_resources", "Operations Manual") != nav_res
-
-if ctx_changes:
+# Sync views seamlessly based on which navigation group was actively clicked
+if nav_main != st.session_state.prev_main:
     st.session_state.current_view = nav_main
-    st.session_state.last_nav_main = nav_main
-elif res_changes:
+    st.session_state.prev_main = nav_main
+    st.rerun()
+elif nav_res != st.session_state.prev_res:
     st.session_state.current_view = nav_res
-    st.session_state.last_nav_resources = nav_res
+    st.session_state.prev_res = nav_res
+    st.rerun()
 
 active_page = st.session_state.current_view
 
@@ -465,10 +463,6 @@ elif active_page == "Crowd Flow":
                 </div>
             </div>
         """)
-
-# ==========================================
-# NEW RESOURCE LAYOUTS & INTERACTION CONTENTS
-# ==========================================
 
 # --- OPERATIONS MANUAL ---
 elif active_page == "Operations Manual":

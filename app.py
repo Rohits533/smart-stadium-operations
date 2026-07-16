@@ -238,7 +238,6 @@ elif nav_main == "Stadium Map":
     
     with col_map:
         st.markdown("<div class='section-header'>Live Perimeter Map</div>", unsafe_allow_html=True)
-        # Using st.html ensures Streamlit renders the SVG directly instead of printing tags
         st.html("""
             <div class="glass-card" style="text-align: center; padding: 2rem;">
                 <svg width="100%" height="300" viewBox="0 0 600 300" style="background: transparent;">
@@ -256,8 +255,41 @@ elif nav_main == "Stadium Map":
                     
                     <text x="300" y="155" fill="white" font-weight="bold" font-size="18" text-anchor="middle" letter-spacing="3">PLAYING FIELD</text>
                 </svg>
-                <div style="margin-top: 15px; color: #ef4444; font-weight: bold; font-size: 0.9rem;">
+                <div style="margin-top: 15px; color: #ef4444; font-weight: bold; font-size: 0.9rem; text-shadow: 0 0 6px rgba(239, 68, 68, 0.3);">
                     ⚠️ ALERT: ZONE A PERIMETER SURGE DETECTED
+                </div>
+            </div>
+        """)
+
+        # NEW MAP DIRECTLY BELOW THE ALERT
+        st.markdown("<div class='section-header'>Tactical Close-up: Gate A Bottleneck Analysis</div>", unsafe_allow_html=True)
+        st.html("""
+            <div class="glass-card" style="text-align: center; padding: 1.5rem;">
+                <svg width="100%" height="180" viewBox="0 0 500 180" style="background: rgba(0,0,0,0.2); border-radius: 8px;">
+                    <line x1="0" y1="30" x2="500" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                    <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                    <line x1="0" y1="150" x2="500" y2="150" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                    
+                    <line x1="20" y1="40" x2="350" y2="40" stroke="rgba(255,255,255,0.2)" stroke-width="3" />
+                    <line x1="20" y1="140" x2="350" y2="140" stroke="rgba(255,255,255,0.2)" stroke-width="3" />
+                    
+                    <line x1="350" y1="40" x2="350" y2="140" stroke="#f472b6" stroke-width="4" stroke-dasharray="8 8" />
+                    <text x="360" y="35" fill="#f472b6" font-size="10" font-weight="bold">ACTIVE TURNSTILES</text>
+                    
+                    <ellipse cx="250" cy="90" rx="90" ry="35" fill="rgba(239, 68, 68, 0.35)" stroke="#ef4444" stroke-width="2" />
+                    <text x="250" y="94" fill="white" font-weight="bold" font-size="11" text-anchor="middle">CRITICAL SURGE DENSITY</text>
+                    
+                    <path d="M 40 90 L 110 90 M 100 85 L 110 90 L 100 95" fill="none" stroke="#ef4444" stroke-width="3" />
+                    <text x="45" y="78" fill="rgba(255,255,255,0.6)" font-size="10">Spectator Flow Inward</text>
+                    
+                    <rect x="380" y="100" width="100" height="40" rx="4" fill="rgba(34, 197, 94, 0.1)" stroke="#22c55e" stroke-width="1" />
+                    <text x="430" y="124" fill="#22c55e" font-weight="bold" font-size="10" text-anchor="middle">BYPASS LANE</text>
+                    
+                    <text x="25" y="25" fill="#22d3ee" font-weight="bold" font-size="11">GATE A PLAZA FEED</text>
+                </svg>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.85rem; color: rgba(255,255,255,0.6);">
+                    <span>🔴 Flow Obstruction: <strong>92% (High Risk)</strong></span>
+                    <span>🟢 Backup Routing Capacity: <strong>800/min</strong></span>
                 </div>
             </div>
         """)
@@ -294,6 +326,16 @@ elif nav_main == "Stadium Map":
                 </table>
             </div>
         """)
+        
+        st.markdown("""
+            <div class="glass-card" style="border-left: 4px solid #22d3ee;">
+                <div style="font-weight: 700; color: #22d3ee; margin-bottom: 5px;">AI CO-PILOT ACTIONS</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.4;">
+                    1. Re-routing North Lot shuttle drop-offs to Gate B corridor.<br>
+                    2. Updating Gate A digital signage to: 'USE ALTERNATIVE GATES B & C'.
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
 
 # --- TELEMETRY FEED VIEW ---
 elif nav_main == "Telemetry Feed":
@@ -358,7 +400,6 @@ elif nav_main == "Crowd Flow":
     
     with col_routes:
         st.markdown("<div class='section-header'>Dynamic Routing Corridors</div>", unsafe_allow_html=True)
-        # Using st.html renders the glowing progress bars properly!
         st.html("""
             <div class="glass-card">
                 <div style="font-weight: 700; font-size: 1.1rem; color: white; margin-bottom: 12px;">Active Evacuation & Directional Routings</div>

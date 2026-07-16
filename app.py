@@ -15,7 +15,7 @@ st.markdown("""
         color: #22d3ee !important;
     }
     </style>
-""", unsafe_allow_javascript=True)
+""", unsafe_allow_html=True)
 
 st.title("🏟️ STADIUMPULSE AI — Smart Stadium Operations")
 st.write("Leveraging Gemini AI for real-time tournament operations, crowd logistics, and fan routing.")

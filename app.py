@@ -192,7 +192,7 @@ with st.sidebar:
 # 3. MAIN DASHBOARD CONTENT (Dynamic rendering based on Nav)
 # ==========================================
 
-# Use the sidebar state directly to control main content rendering!
+# --- DASHBOARD VIEW ---
 if nav_main == "Dashboard":
     st.markdown("<div class='main-header'>StadiumPulse Control Hub</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Real-time logistics, crowd intelligence, and automated operational routing.</div>", unsafe_allow_html=True)
@@ -288,6 +288,7 @@ if nav_main == "Dashboard":
                     st.markdown(reply)
                     st.session_state.messages.append({"role": "assistant", "content": reply})
 
+# --- STADIUM MAP VIEW ---
 elif nav_main == "Stadium Map":
     st.markdown("<div class='main-header'>Stadium Tactical Heatmap</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Real-time spatial density and spectator flow metrics.</div>", unsafe_allow_html=True)
@@ -362,8 +363,128 @@ elif nav_main == "Stadium Map":
             </div>
         """, unsafe_allow_html=True)
 
+# --- TELEMETRY FEED VIEW ---
+elif nav_main == "Telemetry Feed":
+    st.markdown("<div class='main-header'>Real-Time Telemetry Feed</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-subheader'>Granular data streams gathered from stadium sensors, cameras, and transport networks.</div>", unsafe_allow_html=True)
+    
+    col_sys, col_cam = st.columns([1, 1])
+    
+    with col_sys:
+        st.markdown("<div class='section-header'>Hardware Sensor Matrix</div>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                    <span style="color: rgba(255,255,255,0.5);">SENSOR TYPE</span>
+                    <span style="color: rgba(255,255,255,0.5);">STATUS</span>
+                    <span style="color: rgba(255,255,255,0.5);">FEED VALUE</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span>🎫 NFC Turnstiles (Gate A)</span>
+                    <span style="color: #4ade80;">ONLINE</span>
+                    <strong style="color: #22d3ee;">142 scans/min</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span>🎟️ NFC Turnstiles (Gate B)</span>
+                    <span style="color: #4ade80;">ONLINE</span>
+                    <strong style="color: #22d3ee;">34 scans/min</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span>🚌 Metro Transit Shuttle</span>
+                    <span style="color: #f59e0b;">DELAYED</span>
+                    <strong style="color: #f472b6;">+8 Min Arrival</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>🍔 POS Registries (Stall 4)</span>
+                    <span style="color: #ef4444;">OVERLOAD</span>
+                    <strong style="color: #ef4444;">18 active orders</strong>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_cam:
+        st.markdown("<div class='section-header'>AI Computer Vision Feed</div>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class="glass-card">
+                <div style="background-color: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem; border: 1px solid rgba(255,255,255,0.05); font-family: monospace; font-size: 0.85rem;">
+                    <div style="color: #22d3ee; margin-bottom: 8px;">🎥 [CAM-04-NORTH] ANALYSING SPECTATOR VELOCITY...</div>
+                    <span style="color: rgba(255,255,255,0.4);">[19:34:10]</span> Density: 3.4 persons/sqm <br>
+                    <span style="color: rgba(255,255,255,0.4);">[19:34:11]</span> Direction: North-to-South (91%) <br>
+                    <span style="color: rgba(255,255,255,0.4);">[19:34:12]</span> Flow classification: <span style="color: #ef4444; font-weight: bold;">Bottlenecking risk high</span> <br>
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
+                    <div style="color: #f472b6; margin-bottom: 8px;">🎥 [CAM-09-EAST] ANALYSING CONCOURSE...</div>
+                    <span style="color: rgba(255,255,255,0.4);">[19:34:08]</span> Density: 0.8 persons/sqm <br>
+                    <span style="color: rgba(255,255,255,0.4);">[19:34:12]</span> Flow classification: <span style="color: #4ade80;">Optimal</span>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+# --- CROWD FLOW VIEW ---
+elif nav_main == "Crowd Flow":
+    st.markdown("<div class='main-header'>Crowd Flow Optimizer</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-subheader'>Automated corridor routing models and crowd mitigation protocols.</div>", unsafe_allow_html=True)
+    
+    col_routes, col_alerts = st.columns([1.2, 1])
+    
+    with col_routes:
+        st.markdown("<div class='section-header'>Dynamic Routing Corridors</div>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class="glass-card">
+                <div style="font-weight: 700; font-size: 1.1rem; color: white; margin-bottom: 12px;">Active Evacuation & Directional Routings</div>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
+                        <span>🚇 Sector North Express Way</span>
+                        <span style="color: #ef4444; font-weight: bold;">88% Load</span>
+                    </div>
+                    <div style="height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                        <div style="width: 88%; height: 100%; background-color: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
+                        <span>🏟️ East Concourse Walkway</span>
+                        <span style="color: #22d3ee; font-weight: bold;">24% Load</span>
+                    </div>
+                    <div style="height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                        <div style="width: 24%; height: 100%; background-color: #22d3ee; box-shadow: 0 0 8px #22d3ee;"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
+                        <span>🎟️ West Gate B Overflow Corridor</span>
+                        <span style="color: #4ade80; font-weight: bold;">12% Load</span>
+                    </div>
+                    <div style="height: 8px; background-color: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                        <div style="width: 12%; height: 100%; background-color: #4ade80; box-shadow: 0 0 8px #4ade80;"></div>
+                    </div>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_alerts:
+        st.markdown("<div class='section-header'>Flow Intervention Triggers</div>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class="glass-card" style="border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.02);">
+                <div style="font-weight: 700; color: #ef4444; margin-bottom: 6px; font-size: 1.1rem;">⚠️ LEVEL 2 INTERVENTION REQUIRED</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.5;">
+                    Spectator queue build-up at <strong>Gate A</strong> exceeds stadium perimeter buffer limit. 
+                    Recommended protocol: Trigger LED signage re-routes and dispatch 2 field safety supervisors to corridor intersection 2-A.
+                </div>
+            </div>
+            
+            <div class="glass-card" style="border-left: 4px solid #22d3ee;">
+                <div style="font-weight: 700; color: #22d3ee; margin-bottom: 6px; font-size: 1rem;">DIGITAL SIGNBOARD SYNC STATUS</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.4;">
+                    Digital message sign boards at the central terminal are synced with alternative routes redirecting spectators to East Walkways.
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+# --- FALLBACK / DEFAULT RESOURCE VIEWS ---
 else:
-    # Render fallback for other views
     st.markdown(f"<div class='main-header'>{nav_main} View</div>", unsafe_allow_html=True)
     st.markdown(f"<div class='main-subheader'>Monitoring resource feed for {nav_main}</div>", unsafe_allow_html=True)
     st.markdown("""

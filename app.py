@@ -6,7 +6,7 @@ import google.generativeai as genai
 # ==========================================
 st.set_page_config(page_title="StadiumPulse Ops Centre", page_icon="🏟️", layout="wide")
 
-# Sleek glassmorphic dark theme inspired by premium music dashboards
+# Sleek glassmorphic dark theme without breaking core click interactions
 st.markdown("""
     <style>
     /* Main app background */
@@ -22,40 +22,36 @@ st.markdown("""
         padding-bottom: 5rem;
     }
 
-    /* Sidebar Styling - ensuring click events flow normally to interactive widgets */
+    /* Sidebar Base Styling */
     [data-testid="stSidebar"] {
-        background-color: rgba(15, 23, 42, 0.95) !important;
+        background-color: rgb(15, 23, 42) !important;
         border-right: 1px solid rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        z-index: 100;
     }
-    
-    /* Ensure all sidebar inputs remain clickable and aren't blocked by overlays */
-    [data-testid="stSidebar"] .element-container,
-    [data-testid="stSidebar"] .stWidget,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] input,
-    [data-testid="stSidebar"] [role="radiogroup"] {
+
+    /* CRITICAL FIX: Restore absolute clickability to all sidebar child containers */
+    [data-testid="stSidebar"] > div {
         pointer-events: auto !important;
-        cursor: pointer !important;
     }
     
-    [data-testid="stSidebar"] h2 {
+    /* Ensure the sidebar title is styled beautifully */
+    .sidebar-title {
         color: #f1f5f9;
         font-weight: 700;
         letter-spacing: 0.05em;
         text-transform: uppercase;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+        margin-top: 1rem;
         margin-bottom: 2rem;
     }
     
     .sidebar-label {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: rgba(255,255,255,0.5);
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: rgba(255,255,255,0.4);
         margin-top: 1.5rem;
         margin-bottom: 0.5rem;
         text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     /* Main Dashboard Layout Components */
@@ -133,7 +129,7 @@ st.markdown("""
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 1000;
+        z-index: 999;
         font-size: 0.9rem;
         color: rgba(255,255,255,0.6);
     }
@@ -171,111 +167,137 @@ if "model" not in st.session_state and api_key:
 # 2. SIDEBAR (NAVIGATION)
 # ==========================================
 with st.sidebar:
-    st.markdown("<h2>STADIUMPULSE OPS</h2>", unsafe_allow_html=True)
+    st.markdown("<div class='sidebar-title'>StadiumPulse Ops</div>", unsafe_allow_html=True)
     
     st.markdown("<div class='sidebar-label'>Operations Centre</div>", unsafe_allow_html=True)
-    st.radio("Navigation", ["Dashboard", "Stadium Map", "Telemetry Feed", "Crowd Flow"], index=0, key="nav_main", label_visibility="collapsed")
+    nav_main = st.radio(
+        "Ops Navigation", 
+        ["Dashboard", "Stadium Map", "Telemetry Feed", "Crowd Flow"], 
+        index=0, 
+        key="nav_main", 
+        label_visibility="collapsed"
+    )
     
     st.markdown("<div class='sidebar-label'>Resources</div>", unsafe_allow_html=True)
-    st.radio("Resources", ["Operations Manual", "Team Channels", "Incident Reports"], index=0, key="nav_resources", label_visibility="collapsed")
-
-
-# ==========================================
-# 3. MAIN DASHBOARD CONTENT
-# ==========================================
-st.markdown("<div class='main-header'>StadiumPulse Control Hub</div>", unsafe_allow_html=True)
-st.markdown("<div class='main-subheader'>Real-time logistics, crowd intelligence, and automated operational routing.</div>", unsafe_allow_html=True)
-
-# Grid Layout: Critical Telemetry Cards
-st.markdown("<div class='section-header'>Active Telemetry</div>", unsafe_allow_html=True)
-m1, m2, m3 = st.columns(3)
-
-with m1:
-    st.markdown("""
-        <div class="glass-card">
-            <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">GATE A CONGESTION</div>
-            <div class="neon-text">92% <span style="font-size:0.95rem; color:#ef4444; text-shadow:none; font-weight:600; margin-left: 8px;">🔴 CRITICAL SURGE</span></div>
-            <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Directing fans to overflow Gates B and C.</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-with m2:
-    st.markdown("""
-        <div class="glass-card">
-            <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">CONCESSION STAND #4</div>
-            <div class="pink-neon">14 MIN <span style="font-size:0.95rem; color:#f59e0b; text-shadow:none; font-weight:600; margin-left: 8px;">🟡 SLOW</span></div>
-            <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Queue length currently at 18 active visitors.</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-with m3:
-    st.markdown("""
-        <div class="glass-card">
-            <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">AI OPERATION ROUTING</div>
-            <div style="font-weight: 800; font-size: 1.8rem; color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);">ACTIVE</div>
-            <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Dynamic digital signboards synced.</div>
-        </div>
-    """, unsafe_allow_html=True)
-
-
-# Dynamic Bottom Section: Terminal logs and AI Assistant
-col1, col2 = st.columns([1, 1.2])
-
-with col1:
-    st.markdown("<div class='section-header'>Live System Telemetry Logs</div>", unsafe_allow_html=True)
-    st.code(
-        "[19:32:01] INFO: Crowd surge detected near Gate A after transit drop-off.\n"
-        "[19:32:15] WARN: Concession Stand #4 queue exceeds 15 people.\n"
-        "[19:32:30] READY: Awaiting AI crowd-routing recommendations...",
-        language="bash"
+    nav_resources = st.radio(
+        "Resources Navigation", 
+        ["Operations Manual", "Team Channels", "Incident Reports"], 
+        index=0, 
+        key="nav_resources", 
+        label_visibility="collapsed"
     )
 
-with col2:
-    st.markdown("<div class='section-header'>Operations Chat Co-Pilot</div>", unsafe_allow_html=True)
-    
-    # Missing secrets handling
-    if not api_key:
+
+# ==========================================
+# 3. MAIN DASHBOARD CONTENT (Dynamic rendering based on Nav)
+# ==========================================
+
+# Use the sidebar state directly to control main content rendering!
+if nav_main == "Dashboard":
+    st.markdown("<div class='main-header'>StadiumPulse Control Hub</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-subheader'>Real-time logistics, crowd intelligence, and automated operational routing.</div>", unsafe_allow_html=True)
+
+    # Grid Layout: Critical Telemetry Cards
+    st.markdown("<div class='section-header'>Active Telemetry</div>", unsafe_allow_html=True)
+    m1, m2, m3 = st.columns(3)
+
+    with m1:
         st.markdown("""
-            <div class="glass-card" style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.25);">
-                <div style="font-weight: 700; color: #f87171; font-size: 1.1rem;">⚠️ API KEY NOT FOUND IN SECRETS</div>
-                <div style="font-size:0.85rem; margin-top:6px; color:rgba(248, 113, 113, 0.8);">
-                    Please set your Gemini API key in your Streamlit Cloud Workspace Secrets as: <br>
-                    <code style="background-color: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: white;">GEMINI_API_KEY = "your-api-key"</code>
-                </div>
+            <div class="glass-card">
+                <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">GATE A CONGESTION</div>
+                <div class="neon-text">92% <span style="font-size:0.95rem; color:#ef4444; text-shadow:none; font-weight:600; margin-left: 8px;">🔴 CRITICAL SURGE</span></div>
+                <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Directing fans to overflow Gates B and C.</div>
             </div>
         """, unsafe_allow_html=True)
-        st.stop()
 
-    # Chat UI container setup
-    if "messages" not in st.session_state:
-        st.session_state.messages = [{
-            "role": "assistant", 
-            "content": "Awaiting commands. I have processed the live telemetry feed. Ready to design emergency routing signs or redirect logistical units."
-        }]
+    with m2:
+        st.markdown("""
+            <div class="glass-card">
+                <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">CONCESSION STAND #4</div>
+                <div class="pink-neon">14 MIN <span style="font-size:0.95rem; color:#f59e0b; text-shadow:none; font-weight:600; margin-left: 8px;">🟡 SLOW</span></div>
+                <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Queue length currently at 18 active visitors.</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with m3:
+        st.markdown("""
+            <div class="glass-card">
+                <div style="color: rgba(255,255,255,0.4); font-weight: 600; margin-bottom: 8px; font-size: 0.8rem; letter-spacing: 0.05em;">AI OPERATION ROUTING</div>
+                <div style="font-weight: 800; font-size: 1.8rem; color: #22c55e; text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);">ACTIVE</div>
+                <div style="font-size:0.85rem; margin-top:8px; color:rgba(255,255,255,0.5);">Dynamic digital signboards synced.</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+
+    # Dynamic Bottom Section: Terminal logs and AI Assistant
+    col1, col2 = st.columns([1, 1.2])
+
+    with col1:
+        st.markdown("<div class='section-header'>Live System Telemetry Logs</div>", unsafe_allow_html=True)
+        st.code(
+            "[19:32:01] INFO: Crowd surge detected near Gate A after transit drop-off.\n"
+            "[19:32:15] WARN: Concession Stand #4 queue exceeds 15 people.\n"
+            "[19:32:30] READY: Awaiting AI crowd-routing recommendations...",
+            language="bash"
+        )
+
+    with col2:
+        st.markdown("<div class='section-header'>Operations Chat Co-Pilot</div>", unsafe_allow_html=True)
         
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
+        # Missing secrets handling
+        if not api_key:
+            st.markdown("""
+                <div class="glass-card" style="background:rgba(239, 68, 68, 0.08); border:1px solid rgba(239, 68, 68, 0.25);">
+                    <div style="font-weight: 700; color: #f87171; font-size: 1.1rem;">⚠️ API KEY NOT FOUND IN SECRETS</div>
+                    <div style="font-size:0.85rem; margin-top:6px; color:rgba(248, 113, 113, 0.8);">
+                        Please set your Gemini API key in your Streamlit Cloud Workspace Secrets as: <br>
+                        <code style="background-color: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: white;">GEMINI_API_KEY = "your-api-key"</code>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+            st.stop()
+
+        # Chat UI container setup
+        if "messages" not in st.session_state:
+            st.session_state.messages = [{
+                "role": "assistant", 
+                "content": "Awaiting commands. I have processed the live telemetry feed. Ready to design emergency routing signs or redirect logistical units."
+            }]
             
-    # Chat Input handler
-    if prompt := st.chat_input("Ask AI Co-Pilot (e.g., 'Draft a rerouting billboard announcement for Gate A')"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-            
-        with st.chat_message("assistant"):
-            with st.spinner("AI is routing..."):
-                model = st.session_state.get("model")
-                if model:
-                    try:
-                        response = model.generate_content(prompt)
-                        reply = response.text
-                    except Exception as e:
-                        reply = f"Error calling Gemini API: {str(e)}"
-                else:
-                    reply = "Operational error: Could not initialize Gemini connection."
-                st.markdown(reply)
-                st.session_state.messages.append({"role": "assistant", "content": reply})
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+                
+        # Chat Input handler
+        if prompt := st.chat_input("Ask AI Co-Pilot (e.g., 'Draft a rerouting billboard announcement for Gate A')"):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+                
+            with st.chat_message("assistant"):
+                with st.spinner("AI is routing..."):
+                    model = st.session_state.get("model")
+                    if model:
+                        try:
+                            response = model.generate_content(prompt)
+                            reply = response.text
+                        except Exception as e:
+                            reply = f"Error calling Gemini API: {str(e)}"
+                    else:
+                        reply = "Operational error: Could not initialize Gemini connection."
+                    st.markdown(reply)
+                    st.session_state.messages.append({"role": "assistant", "content": reply})
+
+else:
+    # Render other views for completeness when navigating!
+    st.markdown(f"<div class='main-header'>{nav_main} View</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='main-subheader'>Monitoring resource feed for {nav_main}</div>", unsafe_allow_html=True)
+    st.markdown("""
+        <div class="glass-card">
+            <h3 style="color: white; margin-bottom: 10px;">Operational Status: Live</h3>
+            <p style="color: rgba(255,255,255,0.7);">System metrics and asset distribution are fully aligned with the central command. No alerts raised.</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 
 # ==========================================

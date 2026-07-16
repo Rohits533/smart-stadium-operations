@@ -6,7 +6,7 @@ import google.generativeai as genai
 # ==========================================
 st.set_page_config(page_title="StadiumPulse Ops Centre", page_icon="🏟️", layout="wide")
 
-# Sleek glassmorphic dark theme without breaking core click interactions
+# Sleek glassmorphic dark theme with completely isolated sidebar pointer rules
 st.markdown("""
     <style>
     /* Main app background */
@@ -16,24 +16,24 @@ st.markdown("""
         font-family: 'Helvetica Neue', sans-serif;
     }
 
-    /* Override Streamlit container padding */
+    /* Override Streamlit container padding and ensure bottom content doesn't get cut off by footer */
     .block-container {
         padding-top: 1.5rem;
-        padding-bottom: 5rem;
+        padding-bottom: 8rem !important;
     }
 
-    /* Sidebar Base Styling */
+    /* CRITICAL INTERACTION FIX FOR SIDEBAR */
     [data-testid="stSidebar"] {
         background-color: rgb(15, 23, 42) !important;
         border-right: 1px solid rgba(255,255,255,0.1);
+        z-index: 100 !important;
     }
 
-    /* CRITICAL FIX: Restore absolute clickability to all sidebar child containers */
-    [data-testid="stSidebar"] > div {
+    /* Force all child elements in the sidebar to accept clicks */
+    [data-testid="stSidebar"] * {
         pointer-events: auto !important;
     }
     
-    /* Ensure the sidebar title is styled beautifully */
     .sidebar-title {
         color: #f1f5f9;
         font-weight: 700;
@@ -41,7 +41,7 @@ st.markdown("""
         text-transform: uppercase;
         font-size: 1.2rem;
         margin-top: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
     
     .sidebar-label {
@@ -116,7 +116,7 @@ st.markdown("""
         border: 1px solid rgba(255,255,255,0.08);
     }
     
-    /* Fixed Footer Bar */
+    /* Fixed Footer Bar - keeps z-index low so it doesn't overlap sidebar clicks */
     .playback-bar {
         position: fixed;
         bottom: 0;
@@ -129,7 +129,7 @@ st.markdown("""
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 999;
+        z-index: 90 !important;
         font-size: 0.9rem;
         color: rgba(255,255,255,0.6);
     }
@@ -174,7 +174,7 @@ with st.sidebar:
         "Ops Navigation", 
         ["Dashboard", "Stadium Map", "Telemetry Feed", "Crowd Flow"], 
         index=0, 
-        key="nav_main", 
+        key="nav_main_selection", 
         label_visibility="collapsed"
     )
     
@@ -183,7 +183,7 @@ with st.sidebar:
         "Resources Navigation", 
         ["Operations Manual", "Team Channels", "Incident Reports"], 
         index=0, 
-        key="nav_resources", 
+        key="nav_resources_selection", 
         label_visibility="collapsed"
     )
 
@@ -288,8 +288,82 @@ if nav_main == "Dashboard":
                     st.markdown(reply)
                     st.session_state.messages.append({"role": "assistant", "content": reply})
 
+elif nav_main == "Stadium Map":
+    st.markdown("<div class='main-header'>Stadium Tactical Heatmap</div>", unsafe_allow_html=True)
+    st.markdown("<div class='main-subheader'>Real-time spatial density and spectator flow metrics.</div>", unsafe_allow_html=True)
+    
+    col_map, col_details = st.columns([1.5, 1])
+    
+    with col_map:
+        st.markdown("<div class='section-header'>Live Perimeter Map</div>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class="glass-card" style="text-align: center; padding: 2rem;">
+                <svg width="100%" height="300" viewBox="0 0 600 300" style="background: transparent;">
+                    <rect x="50" y="20" width="500" height="260" rx="130" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="8" />
+                    <rect x="150" y="70" width="300" height="160" rx="80" fill="rgba(34, 211, 238, 0.05)" stroke="rgba(34, 211, 238, 0.3)" stroke-width="4" />
+                    
+                    <path d="M 50 150 A 130 130 0 0 1 150 20 L 200 70 A 80 80 0 0 0 150 150 Z" fill="rgba(239, 68, 68, 0.45)" stroke="#ef4444" stroke-width="3" />
+                    <text x="80" y="80" fill="white" font-weight="bold" font-size="14">ZONE A (92%)</text>
+                    
+                    <path d="M 450 20 A 130 130 0 0 1 550 150 L 450 150 A 80 80 0 0 0 400 70 Z" fill="rgba(34, 211, 238, 0.15)" stroke="#22d3ee" stroke-width="2" />
+                    <text x="460" y="80" fill="rgba(255,255,255,0.7)" font-size="12">ZONE B (20%)</text>
+
+                    <path d="M 550 150 A 130 130 0 0 1 450 280 L 400 230 A 80 80 0 0 0 450 150 Z" fill="rgba(34, 211, 238, 0.15)" stroke="#22d3ee" stroke-width="2" />
+                    <text x="460" y="230" fill="rgba(255,255,255,0.7)" font-size="12">ZONE C (18%)</text>
+                    
+                    <text x="300" y="155" fill="white" font-weight="bold" font-size="18" text-anchor="middle" letter-spacing="3">PLAYING FIELD</text>
+                </svg>
+                <div style="margin-top: 15px; color: #ef4444; font-weight: bold; font-size: 0.9rem;">
+                    ⚠️ ALERT: ZONE A PERIMETER SURGE DETECTED
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_details:
+        st.markdown("<div class='section-header'>Gate Statistics</div>", unsafe_allow_html=True)
+        st.markdown("""
+            <div class="glass-card">
+                <table style="width: 100%; border-collapse: collapse; color: white;">
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; font-size: 0.85rem; color: rgba(255,255,255,0.5);">
+                        <th style="padding: 8px 0;">GATE</th>
+                        <th style="padding: 8px 0;">STATUS</th>
+                        <th style="padding: 8px 0;">FLOW RATE</th>
+                        <th style="padding: 8px 0;">WAIT TIME</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 12px 0; font-weight: bold; color: #ef4444;">Gate A</td>
+                        <td style="color: #ef4444;">SURGE</td>
+                        <td>412/min</td>
+                        <td><strong>26 min</strong></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td style="padding: 12px 0; font-weight: bold; color: #22d3ee;">Gate B</td>
+                        <td style="color: #22d3ee;">CLEAR</td>
+                        <td>88/min</td>
+                        <td><strong>3 min</strong></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px 0; font-weight: bold; color: #22d3ee;">Gate C</td>
+                        <td style="color: #22d3ee;">CLEAR</td>
+                        <td>62/min</td>
+                        <td><strong>2 min</strong></td>
+                    </tr>
+                </table>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+            <div class="glass-card" style="border-left: 4px solid #22d3ee;">
+                <div style="font-weight: 700; color: #22d3ee; margin-bottom: 5px;">AI CO-PILOT ACTIONS</div>
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.4;">
+                    1. Re-routing North Lot shuttle drop-offs to Gate B corridor.<br>
+                    2. Updating Gate A digital signage to: 'USE ALTERNATIVE GATES B & C'.
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
 else:
-    # Render other views for completeness when navigating!
+    # Render fallback for other views
     st.markdown(f"<div class='main-header'>{nav_main} View</div>", unsafe_allow_html=True)
     st.markdown(f"<div class='main-subheader'>Monitoring resource feed for {nav_main}</div>", unsafe_allow_html=True)
     st.markdown("""

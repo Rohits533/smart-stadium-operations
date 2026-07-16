@@ -116,7 +116,7 @@ st.markdown("""
         border: 1px solid rgba(255,255,255,0.08);
     }
     
-    /* Fixed Footer Bar - keeps z-index low so it doesn't overlap sidebar clicks */
+    /* Fixed Footer Bar */
     .playback-bar {
         position: fixed;
         bottom: 0;
@@ -192,7 +192,7 @@ with st.sidebar:
 # 3. MAIN DASHBOARD CONTENT (Dynamic rendering based on Nav)
 # ==========================================
 
-# --- DASHBOARD VIEW ---
+# --- 1. DASHBOARD VIEW ---
 if nav_main == "Dashboard":
     st.markdown("<div class='main-header'>StadiumPulse Control Hub</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Real-time logistics, crowd intelligence, and automated operational routing.</div>", unsafe_allow_html=True)
@@ -288,7 +288,7 @@ if nav_main == "Dashboard":
                     st.markdown(reply)
                     st.session_state.messages.append({"role": "assistant", "content": reply})
 
-# --- STADIUM MAP VIEW ---
+# --- 2. STADIUM MAP VIEW ---
 elif nav_main == "Stadium Map":
     st.markdown("<div class='main-header'>Stadium Tactical Heatmap</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Real-time spatial density and spectator flow metrics.</div>", unsafe_allow_html=True)
@@ -363,7 +363,7 @@ elif nav_main == "Stadium Map":
             </div>
         """, unsafe_allow_html=True)
 
-# --- TELEMETRY FEED VIEW ---
+# --- 3. TELEMETRY FEED VIEW ---
 elif nav_main == "Telemetry Feed":
     st.markdown("<div class='main-header'>Real-Time Telemetry Feed</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Granular data streams gathered from stadium sensors, cameras, and transport networks.</div>", unsafe_allow_html=True)
@@ -419,7 +419,7 @@ elif nav_main == "Telemetry Feed":
             </div>
         """, unsafe_allow_html=True)
 
-# --- CROWD FLOW VIEW ---
+# --- 4. CROWD FLOW VIEW ---
 elif nav_main == "Crowd Flow":
     st.markdown("<div class='main-header'>Crowd Flow Optimizer</div>", unsafe_allow_html=True)
     st.markdown("<div class='main-subheader'>Automated corridor routing models and crowd mitigation protocols.</div>", unsafe_allow_html=True)
@@ -483,7 +483,7 @@ elif nav_main == "Crowd Flow":
             </div>
         """, unsafe_allow_html=True)
 
-# --- FALLBACK / DEFAULT RESOURCE VIEWS ---
+# --- 5. FALLBACK / DEFAULT RESOURCE VIEWS ---
 else:
     st.markdown(f"<div class='main-header'>{nav_main} View</div>", unsafe_allow_html=True)
     st.markdown(f"<div class='main-subheader'>Monitoring resource feed for {nav_main}</div>", unsafe_allow_html=True)
